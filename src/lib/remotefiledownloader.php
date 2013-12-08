@@ -6,6 +6,9 @@
  *  @author Samundra Shrestha
  *  @date September 19, 2013 
  */
+
+namespace Gitsamundra\RemoteFileDownloader;
+
 class RemoteFileDownloader {
 
     protected $_collections = array();

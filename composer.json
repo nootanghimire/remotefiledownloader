@@ -1,6 +1,27 @@
 {
     "name":"samundra/remotefiledownloader",
+    "description":"Remote file downloader",
+    "keywords":["php","downloader","remotefiledownloader"],
+    "type":"library",
+    "homepage":"http://github.com/samundra/remotefiledownloader",
+    "license":"MIT",
+    "authors":[
+      {
+          "name":"Samundra Shrestha",
+          "homepage":"https://github.com/samundra/remotefiledownloader/contributors",
+          "email":"admin@samundra.com.np",
+          "role":"Developer"
+      }  
+    ],
     "require":{
-        "php":">=5.3.0"        
+        "php":">=5.3.0",
+        "ext-curl":"*",
+        "ext-json":"*"
+    },
+    "autoload":{
+        "psr-0":{
+            "Downloader":["src","tests"],
+            "Downloader\\Main":"src"
+        }
     }
 }
