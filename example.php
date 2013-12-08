@@ -1,16 +1,18 @@
 <?php
 
+require "remotefiledownloader.php";
+
 // Source images
 $images = array(
-	'http://cdn.tutsplus.com/net/uploads/legacy/1140_st2plugins/200u.jpg',
-	'http://cdn.tutsplus.com/net/uploads/legacy/1140_st2plugins/zen.png',
+	'http://localhost/assets/images/ideal-prop-logo.png',
+	'http://localhost/assets/images/ideal-prop-logo.png',
 	);
 
 // Initialise our downloader
 $r = new RemoteFileDownloader('prefix', 'suffix', true);
 
 // Change this to your target folder
-$image_dir = '/home/samundra/downloads/'; // absolute path
+$image_dir = 'testDownloads/'; 
 
 // Set mode for newly created files
 $mode = 0755;
@@ -21,8 +23,11 @@ $recursive = true;
 // Finally set the target where files will be downloaded
 $r->set_destination($image_dir, $mode, $recursive);
 
+$obj = new Stdclass;
+
+
 // Add your source files, images
-$r->set_sources($images);
+$r->set_sources($obj);
 
 
 try {

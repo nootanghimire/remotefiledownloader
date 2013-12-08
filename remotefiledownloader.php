@@ -1,5 +1,5 @@
 <?php
-
+ 
 /**
  *  Downloads files remotely
  *  @package RemoteFileDownloader
@@ -153,6 +153,7 @@ class RemoteFileDownloader {
 
         if ($recursive === true) {
             if (!file_exists($path)) {
+               
                 if (!mkdir($path, $mode, true)) {
                     throw new RemoteFileDownloaderException('Remotefiledownloader::Couldn\'t create directory.', 3);
                 }
