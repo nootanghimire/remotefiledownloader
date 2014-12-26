@@ -2,7 +2,7 @@
 
 require_once __DIR__.'../vendor/autoload.php';
 
-use Fivedots\RemoteFileDownloader;
+use Fivedots\FileDownloader\RemoteFileDownloader;
 
 $images = array(
 	'http://202.63.240.10/userportal/pages/images/inventlogo.png',
