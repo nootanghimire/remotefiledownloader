@@ -18,8 +18,8 @@
     ],
     "minimum-stability": "dev",
     "autoload": {
-        "psr-0": {
-            "Fivedots":"src/"
+        "psr-4": {
+            "Fivedots\\FileDownloader\\":"src/Fivedots/FileDownloader"
         }
     }
 }

@@ -88,7 +88,7 @@ class RemoteFileDownloader {
             $file = $item;
             $this->_current_queue = pathinfo($file);
             ob_clean();
-            ob_start(array('Fivedots\RemoteFileDownloader', 'filewriter'));
+            ob_start(array(__CLASS__, 'filewriter'));
             $contents = file_get_contents($file);
 
             // The source url is invalid so, couldn't download the image
