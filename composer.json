@@ -1,5 +1,5 @@
 {
-    "name": "fivedots/remotefiledownloader",
+    "name": "fivedots/filedownloader",
     "description": "Downloads the remote files",
     "homepage":"http://github.com/samundra/remotefiledownloader",
     "require": {
