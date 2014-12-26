@@ -1,13 +1,17 @@
 <?php
- 
+
+namespace Fivedots;
+
+use Fivedots\Exceptions\InvalidDestinationException;
+use Fivedots\Exceptions\RemoteFileDownloaderException;
+use Fivedots\Exceptions\InvalidSourceException;
+
 /**
  *  Downloads files remotely
  *  @package RemoteFileDownloader
  *  @author Samundra Shrestha
  *  @date September 19, 2013 
  */
-
-namespace Gitsamundra\RemoteFileDownloader;
 
 class RemoteFileDownloader {
 
@@ -55,7 +59,7 @@ class RemoteFileDownloader {
      */
     public function set_sources($collections) {
         if (is_object($collections)) {
-            throw new InvalidSourceException('Object collection is not supported', 3);
+            throw new InvalidSourceException("Object collection is not supported", 3);
         }
         if (is_array($collections)) {
             $this->_collections = $collections;
@@ -66,11 +70,12 @@ class RemoteFileDownloader {
 
     /**
      * Initiate the actual download
-     * @param boolean $is_new <p>Set this to new when you are newly creating 
-     * a download collections. If you want the downloaded images to be appended 
+     * @param boolean $is_new <p>Set this to new when you are newly creating
+     * a download collections. If you want the downloaded images to be appended
      * with new collection list, set this to false.</p>
-     * 
-     * @see filewriter  
+     *
+     * @see filewriter
+     * @return array All the downloaded files
      */
     public function init($is_new = true) {
 
@@ -83,16 +88,16 @@ class RemoteFileDownloader {
             $file = $item;
             $this->_current_queue = pathinfo($file);
             ob_clean();
-            ob_start(array('RemoteFileDownloader', 'filewriter'));
-            $p = file_get_contents($file);
+            ob_start(array('Fivedots\RemoteFileDownloader', 'filewriter'));
+            $contents = file_get_contents($file);
 
             // The source url is invalid so, couldn't download the image
-            if ($p == false) {
+            if ($contents == false) {
                 ob_end_flush();
                 $this->_error[] = $file;
                 continue;
             }
-            echo $p;
+            echo $contents;
             ob_end_flush();
         }
 
@@ -102,7 +107,7 @@ class RemoteFileDownloader {
     /**
      * Writes output buffer to the file.
      * 
-     * @param type $buffer Output buffer which is in the memory
+     * @param mixed $buffer Output buffer which is in the memory
      * @see init
      */
     public function filewriter($buffer) {
@@ -123,7 +128,7 @@ class RemoteFileDownloader {
             $fn = $this->_current_queue['filename'];
             $ext = isset($this->_current_queue['extension']) ? $this->_current_queue['extension'] : 'jpg';
 
-            $filename = md5($fn . me_rand() . rand(5, 15)) . '.' . $ext;
+            $filename = md5($fn . mt_rand() . rand(5, 15)) . '.' . $ext;
             //$filename = $this->_current_queue['basename'];
         }
         $this->_files[] = $filename;
@@ -134,16 +139,19 @@ class RemoteFileDownloader {
 
         // Just give some time to other PHP files as well
         // Sleep for 100 microsecond
+        // FIXME: This will delay the execution and requires optimizations
         usleep(100);
     }
 
     /**
      * <p>Sets the destination path, if second parameter is false then destination
      * path is not created.</p>
-     * @param string $dirname <p>Destination path</p>
+     * @param string $path destination path
      * @param int $mode File permission mode
-     * @param boolean $recursive <p>If true, the destination directory is created, if 
-     * it doesn't exists. </p>
+     * @param boolean $recursive <p>If true, the destination directory is created, if it doesn't exists. </p>
+     * @throws InvalidDestinationException
+     * @throws RemoteFileDownloaderException
+     * @internal param string $dirname <p>Destination path</p>
      */
     public function set_destination($path, $mode = 0755, $recursive = false) {
         $this->create = $recursive;
@@ -168,37 +176,7 @@ class RemoteFileDownloader {
 
 }
 
-/**
- * <b>InvalidSourceException</b> thrown when the destination is invalid.
- * @link http://php.net/manual/en/class.exception.php
- * @see set_destination()
- */
-class InvalidDestinationException extends RemoteFileDownloaderException {
-    
-}
 
-/**
- * <b>InvalidSourceException</b> thrown when source is invalid
- * @link http://php.net/manual/en/class.exception.php
- */
-class InvalidSourceException extends RemoteFileDownloaderException {
-    
-}
 
-/**
- * <b>RemoteFileDownloaderException</b> thrown when downloader meets any exception
- * @link http://php.net/manual/en/class.exception.php
- */
-class RemoteFileDownloaderException extends Exception {
-
-    public function __construct($message, $code = 0, Exception $previous = null) {
-        parent::__construct($message, $code, $previous);
-    }
-
-    public function __toString() {
-        return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
-    }
-
-}
 
 ?>
