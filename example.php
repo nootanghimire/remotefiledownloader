@@ -1,11 +1,12 @@
 <?php
 
-require "remotefiledownloader.php";
+require_once __DIR__.'../vendor/autoload.php';
 
-// Source images
+use Fivedots\RemoteFileDownloader;
+
 $images = array(
-	'http://localhost/assets/images/ideal-prop-logo.png',
-	'http://localhost/assets/images/ideal-prop-logo.png',
+	'http://202.63.240.10/userportal/pages/images/inventlogo.png',
+	'http://i.ytimg.com/vi/zlC_KIPw1uo/0.jpg',
 	);
 
 // Initialise our downloader
@@ -23,19 +24,17 @@ $recursive = true;
 // Finally set the target where files will be downloaded
 $r->set_destination($image_dir, $mode, $recursive);
 
-$obj = new Stdclass;
-
-
+//$obj = new Stdclass;
 // Add your source files, images
-$r->set_sources($obj);
-
+$r->set_sources($images);
 
 try {
-    // Begin the downloading and then wait for returned array
+    // Begin the download and then wait for returned array
 	$files = $r->init();
-
     // Get the recently downloaded images files as array
+	print '<pre>';
 	print_r($files);
+
 } catch (InvalidSourceException $e) {
     // Invalid source
 } catch (InvalidDestinationException $e) {
