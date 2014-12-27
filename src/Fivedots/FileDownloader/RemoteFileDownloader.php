@@ -8,12 +8,12 @@ use Fivedots\FileDownloader\Exceptions\InvalidSourceException;
 
 /**
  *  Downloads files remotely
- *  @package RemoteFileDownloader
- *  @author Samundra Shrestha
- *  @date September 19, 2013 
+ * @package RemoteFileDownloader
+ * @author Samundra Shrestha
+ * @date September 19, 2013
  */
-
-class RemoteFileDownloader {
+class RemoteFileDownloader
+{
 
     protected $_collections = array();
     protected $prefix;
@@ -28,13 +28,14 @@ class RemoteFileDownloader {
 
     /**
      * Initialises instance
-     * 
-     * @param string $prefix Prefix that is appended to the target filename 
+     *
+     * @param string $prefix Prefix that is appended to the target filename
      * @param string $suffix Suffix that is appended to the target filename
      * @param boolean $preserve_filename If false, filename is computed
-     * dynamically by the system  
+     * dynamically by the system
      */
-    public function __construct($prefix = '', $suffix = '', $preserve_filename = false) {
+    public function __construct($prefix = '', $suffix = '', $preserve_filename = false)
+    {
         $this->basedir = __DIR__;
 
         if (!empty($prefix)) {
@@ -50,14 +51,16 @@ class RemoteFileDownloader {
     }
 
     /**
-     * Sources of the files to download. Currently this function accepts string 
+     * Sources of the files to download. Currently this function accepts string
      * and array as source. Object is not supported. If object is passed then function
      * throws the InvalidSourceException which user has to manually catch.
-     * 
+     *
      * @param mixed $collections <p>can be array or string</p>
+     * @return array Returns the updated collections
      * @throws InvalidSourceException <p>Exception thrown when source is not supported</p>
      */
-    public function set_sources($collections) {
+    public function set_sources($collections)
+    {
         if (is_object($collections)) {
             throw new InvalidSourceException("Object collection is not supported", 3);
         }
@@ -66,6 +69,7 @@ class RemoteFileDownloader {
         } else {
             $this->_collections = array($collections);
         }
+        return $this->_collections;
     }
 
     /**
@@ -77,7 +81,8 @@ class RemoteFileDownloader {
      * @see filewriter
      * @return array All the downloaded files
      */
-    public function init($is_new = true) {
+    public function init($is_new = true)
+    {
 
         // Empty the array for the first time
         if ($is_new === true) {
@@ -106,11 +111,12 @@ class RemoteFileDownloader {
 
     /**
      * Writes output buffer to the file.
-     * 
+     *
      * @param mixed $buffer Output buffer which is in the memory
      * @see init
      */
-    public function filewriter($buffer) {
+    public function filewriter($buffer)
+    {
         if ($this->preserve_filename == true) {
             $filename = '';
             if ($this->prefix) {
@@ -123,23 +129,22 @@ class RemoteFileDownloader {
             $ext = isset($this->_current_queue['extension']) ? $this->_current_queue['extension'] : 'jpg';
             $filename .= '.' . $ext;
 
-            //$filename = $this->prefix.'_'.$t.'_'. $this->suffix . '.'.$this->_current_queue['extension'];
         } else {
             $fn = $this->_current_queue['filename'];
             $ext = isset($this->_current_queue['extension']) ? $this->_current_queue['extension'] : 'jpg';
 
             $filename = md5($fn . mt_rand() . rand(5, 15)) . '.' . $ext;
-            //$filename = $this->_current_queue['basename'];
+
         }
         $this->_files[] = $filename;
 
-        $filepath = $this->_dirname . $filename;
+        $file_path = $this->_dirname . $filename;
 
-        file_put_contents($filepath, $buffer);
+        file_put_contents($file_path, $buffer);
 
         // Just give some time to other PHP files as well
         // Sleep for 100 microsecond
-        // FIXME: This will delay the execution and requires optimizations
+        // TODO: This will delay the execution and requires optimizations
         usleep(100);
     }
 
@@ -149,34 +154,31 @@ class RemoteFileDownloader {
      * @param string $path destination path
      * @param int $mode File permission mode
      * @param boolean $recursive <p>If true, the destination directory is created, if it doesn't exists. </p>
+     * @return string Destination path
      * @throws InvalidDestinationException
      * @throws RemoteFileDownloaderException
-     * @internal param string $dirname <p>Destination path</p>
+     *
      */
-    public function set_destination($path, $mode = 0755, $recursive = false) {
+    public function set_destination_path($path, $mode = 0755, $recursive = false)
+    {
         $this->create = $recursive;
 
         if (file_exists($path) === false && $recursive === false) {
             throw new InvalidDestinationException('Remotefiledownloader::Destination does not exists', 2);
         }
 
-        //$path = $this->basedir.'/'.$dirname;
-
         if ($recursive === true) {
             if (!file_exists($path)) {
-               
+
                 if (!mkdir($path, $mode, true)) {
-                    throw new RemoteFileDownloaderException('Remotefiledownloader::Couldn\'t create directory.', 3);
+                    throw new RemoteFileDownloaderException('Remotefiledownloader::Unable to create destination directory.', 3);
                 }
             }
         }
-
         $this->_dirname = $path;
+        return $this->_dirname;
     }
 
 }
-
-
-
 
 ?>
