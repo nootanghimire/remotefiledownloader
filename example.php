@@ -22,7 +22,7 @@ $mode = 0755;
 $recursive = true;
 
 // Finally set the target where files will be downloaded
-$r->set_destination($image_dir, $mode, $recursive);
+$r->set_destination_path($image_dir, $mode, $recursive);
 
 //$obj = new Stdclass;
 // Add your source files, images
