@@ -15,7 +15,7 @@ use Fivedots\FileDownloader\Exceptions\InvalidSourceException;
 class RemoteFileDownloader
 {
 
-    protected $_collections = array();
+    protected $_collections = [];
     protected $prefix;
     protected $suffix;
     protected $_current_queue;
@@ -86,7 +86,7 @@ class RemoteFileDownloader
 
         // Empty the array for the first time
         if ($is_new === true) {
-            $this->_files = array();
+            $this->_files = [];
         }
 
         foreach ($this->_collections as $item) {
